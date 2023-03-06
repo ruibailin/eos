@@ -20,22 +20,22 @@ extern int	knl_this_pno;
 /*================================================================*/
 #include "./runtime/r_pcb.h"
 /*------------------------------------*/
-int	SELF(void);
-int	SELF()
+int	EOS_SELF(void);
+int	EOS_SELF()
 {
 	return(knl_this_pno);
 }
 /*------------------------------------*/
-int	STATE(void);
-int	STATE()
+int	EOS_STATE(void);
+int	EOS_STATE()
 {
 	int ss;
 	ss=get_pcb_state(knl_this_pno);
 	return(ss);
 }
 /*------------------------------------*/
-void NEXT(int ss);
-void NEXT(int ss)
+void EOS_NEXT(int ss);
+void EOS_NEXT(int ss)
 {
 	set_pcb_state(knl_this_pno,ss);
 }
@@ -45,8 +45,8 @@ extern int knl_this_tim;
 #include "./message/r_msg.h"
 #include "./timer/r_tcb.h"
 /*------------------------------------*/
-int	EVENT(void);
-int	EVENT()
+int	EOS_EVENT(void);
+int	EOS_EVENT()
 {
 	int event;
 	int pno,tno;
@@ -66,8 +66,8 @@ int	EVENT()
 	return 0;
 }
 /*------------------------------------*/
-int	LENGTH(void);
-int	LENGTH()
+int	EOS_LENGTH(void);
+int	EOS_LENGTH()
 {
 	int length;
 	if(knl_this_msg==0)
@@ -77,8 +77,8 @@ int	LENGTH()
 	return(length);
 }
 /*------------------------------------*/
-int	SENDER(void);
-int	SENDER()
+int	EOS_SENDER(void);
+int	EOS_SENDER()
 {
 	int sour;
 
@@ -89,8 +89,8 @@ int	SENDER()
 }
 
 /*------------------------------------*/
-void	ASEND(int dd,int ee,int ll,void *in);
-void	ASEND(int dd,int ee,int ll,void *in)
+void	EOS_ASEND(int dd,int ee,int ll,void *in);
+void	EOS_ASEND(int dd,int ee,int ll,void *in)
 {
 	int node;
 	node=get_msg_idle(knl_this_pno,ee,ll);
@@ -98,10 +98,15 @@ void	ASEND(int dd,int ee,int ll,void *in)
 }
 /*================================================================*/
 /*------------------------------------*/
-void SET(int tno,int ll);
-void SET(int tno,int ll)
+void EOS_SET(int tno,int ll);
+void EOS_SET(int tno,int ll)
 {
 	int node;
+	ll /= 10;
+	if(ll==0)
+		ll=1;
+	ll *= 10;
+
 	node=get_pcb_timer(knl_this_pno,tno);
 	if(node != 0)							//repeat set timer
 		reset_node_tcb(node);
@@ -111,8 +116,8 @@ void SET(int tno,int ll)
 	set_node_tcb(node,ll);
 }
 /*------------------------------------*/
-void KILL(int tno);
-void KILL(int tno)
+void EOS_KILL(int tno);
+void EOS_KILL(int tno)
 {
 	int node;
 	node=get_pcb_timer(knl_this_pno,tno);

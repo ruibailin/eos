@@ -30,8 +30,8 @@
 #endif
 /*------------------------------------*/
 typedef struct{
-  unsigned short  len;
-  unsigned short  rst;
+  unsigned int  len;
+  unsigned int  rst;
   uintxx  tno;
   uintxx  pno;
 }TCB;
@@ -120,7 +120,7 @@ void set_node_tcb(int node,int len)
 	TCB		*node_ptr,*root_ptr;
 
 	node_ptr=(TCB  *)&(TCBPool[node]);
-	node_ptr->len=(unsigned short)len;
+	node_ptr->len=(unsigned int)len;
 
 	if(len < 10)
 	{
@@ -198,7 +198,7 @@ static  void dec_tcb_list(int  root);
 static  void dec_tcb_list(int  root)
 {
   int node,next;
-  unsigned short len;
+  unsigned int len;
 
   if(TCBPool[root].rst == 0)
   return;                                 /*Queue Is Empty*/

@@ -22,18 +22,18 @@ void  msg_watch_dog(void *in);
 void  msg_watch_dog(void *in)
 {
 	int ss;
-	ss=STATE();
+	ss=EOS_STATE();
 	switch(ss)
 	{
 	case 0:
-		SET(1,1000);
+		EOS_SET(1,1000);
 	    second=rbl_get_second();
 		minute=rbl_get_minute();
 		hour=rbl_get_hour();
-		NEXT(1);
+		EOS_NEXT(1);
 		break;
 	case 1:
-		SET(1,1000);
+		EOS_SET(1,1000);
 		second++;
 		if(second == 60)
 			  { second=0;minute++;}
@@ -66,44 +66,44 @@ void msg_pro1(void *ptr)
 {
 	int ii;
 	int  ss,ee,pno;
-	ss=STATE();
-	pno=SELF();
-	ee=EVENT();
+	ss=EOS_STATE();
+	pno=EOS_SELF();
+	ee=EOS_EVENT();
 
 	switch(ss)
 	{
 	case 0:
 
 		ii=get_ii();
-		SET(1,ii);
+		EOS_SET(1,ii);
 
 		ii=get_ii();
-		SET(2,ii);
+		EOS_SET(2,ii);
 
-		NEXT(1);
+		EOS_NEXT(1);
 		break;
 	case 1:
 		if(ee==1)
 		{
 			ii=get_ii();
-			SET(1,ii);
+			EOS_SET(1,ii);
 
-			KILL(2);
+			EOS_KILL(2);
 			ii=get_ii();
-			SET(2,ii);
+			EOS_SET(2,ii);
 
-			ASEND(15,14,4,&second);
+			EOS_ASEND(15,14,4,&second);
 			break;
 		}
 		if(ee==2)
 		{
 			ii=get_ii();
-			SET(2,ii);
+			EOS_SET(2,ii);
 
-			KILL(1);
+			EOS_KILL(1);
 			ii=get_ii();
-			SET(1,ii);
-			ASEND(15,16,4,&minute);
+			EOS_SET(1,ii);
+			EOS_ASEND(15,16,4,&minute);
 			break;
 		}
 		break;
@@ -121,9 +121,9 @@ void msg_pro2(void *ptr)
 {
 	int  ss,ee,pno;
 	int ii;
-	ss=STATE();
-	pno=SELF();
-	ee=EVENT();
+	ss=EOS_STATE();
+	pno=EOS_SELF();
+	ee=EOS_EVENT();
 
 	switch(ee)
 	{
