@@ -19,6 +19,9 @@
 extern	int		get_pcb_state(int pcb);
 extern	void	set_pcb_state(int pcb,int ss);
 
+extern	void *get_pcb_data(int pcb);
+extern	void	set_pcb_data(int pcb,void *data);
+
 extern	int		get_pcb_parent(int pcb);
 extern	void	set_pcb_parent(int pcb,int parent);
 

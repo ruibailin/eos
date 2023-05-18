@@ -41,7 +41,7 @@ void  msg_watch_dog(void *in)
 		      { minute=0; hour++;}
 		if(hour == 24)
 			  hour=0;
-		rbl_printf("TIME:%2d:%02d:%02d \n",hour,minute,second);
+		rbl_printf("\nTIME:%2d:%02d:%02d \n",hour,minute,second);
 		break;
 	default:
 		break;
@@ -115,6 +115,21 @@ void msg_pro1(void *ptr)
 
 
 /*================================================================*/
+static void test_proc(void *in)
+{
+	int ss,pno;
+	ss=EOS_STATE();
+	pno=EOS_SELF();
+	if(ss==0)
+	{
+		printf("\nI'm created,%d",pno);
+	}
+	ss++;
+	if(ss>20)
+		ss=0;
+	EOS_NEXT(ss);
+}
+extern int create_pcb(char *name,void (*entry)(void *),int type,int attr);
 /*------------------------------------*/
 void msg_pro2(void *ptr);
 void msg_pro2(void *ptr)
@@ -128,7 +143,14 @@ void msg_pro2(void *ptr)
 	switch(ee)
 	{
 	case 0:
-
+		pno=create_pcb("TIME 2",test_proc,4,100);
+		printf("\nCreated TIME,%d",pno);
+		pno=create_pcb("TIME 2",test_proc,4,200);
+		printf("\nCreated TIME,%d",pno);
+		pno=create_pcb("MSG 2",test_proc,3,0);
+		printf("\nCreated MSG,%d",pno);
+		pno=create_pcb("MSG 2",test_proc,3,0);
+		printf("\nCreated MSG,%d",pno);
 		break;
 	case 14:
 		ii=(*(int *)ptr);

@@ -38,9 +38,8 @@ void knl_run_all()
 {
 	int res;
 	knl_run_real_p();
-	res=knl_run_time_p();
-	if(res)
-		return;
+	knl_run_time_p();
+
 	res=knl_run_tim();
 	if(res)
 		return;

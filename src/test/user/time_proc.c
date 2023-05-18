@@ -23,7 +23,7 @@ void  time_show_date(void *in);
 void  time_show_date(void *in)
 {
 	msec++;
-	if(msec<1000)
+	if(msec<100)
 		return;
 	msec=0;
 
@@ -34,7 +34,7 @@ void  time_show_date(void *in)
 	      { minute=0; hour++;}
 	if(hour == 24)
 		  hour=0;
-	rbl_printf("PROC:%2d:%02d:%02d  ",hour,minute,second);
+	rbl_printf("\nPROC:%2d:%02d:%02d  \n",hour,minute,second);
 }
 
 /*---------------------------------------*/

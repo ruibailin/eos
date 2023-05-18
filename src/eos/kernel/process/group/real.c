@@ -15,31 +15,36 @@
 #include "1imp.h"
 #include "queue.h"
 /*================================================================*/
-static	int real_head=0;
+//static	int real_head=0;
 
-void add_real_grp(int pno);
-void add_real_grp(int pno)
+void grp_add_real_pro(int pno);
+void grp_add_real_pro(int pno)
 {
+	int real_head;
+	real_head=grp_get_head(REAL_PROC);
 	if(pno == real_head)
 		return;
 	if(real_head == 0)
-		real_head = pno;			//first process
-	grp_add_pro(real_head,pno);
+		grp_set_head(REAL_PROC,pno);				//first process
+	else
+		grp_add_pro(real_head,pno);
 }
 
-void del_real_grp(int pno);
-void del_real_grp(int pno)
+void grp_del_real_pro(int pno);
+void grp_del_real_pro(int pno)
 {
+	int real_head;
+	real_head=grp_get_head(REAL_PROC);
 	if(pno == real_head)
 	{
-		real_head = 0;
+		grp_set_head(REAL_PROC,pno);
 		return;
 	}
-	grp_del_pro(real_head,pno);
+	grp_del_pro(pno);
 }
 
-void ini_real_grp(void);
-void ini_real_grp()
+void grp_ini_real_pro(void);
+void grp_ini_real_pro()
 {
 	int i,j;
 	for(i=1;i<MAX_PAT_NUM;i++)
@@ -47,19 +52,19 @@ void ini_real_grp()
 		j=get_pat_tno(i);
 		if(j==REAL_PROC)
 		{
-			if(real_head==0)
-				real_head=i;	//first proc
-			add_real_grp(i);
+			grp_add_real_pro(i);
 		}
 	}
 }
 
 
-void	run_real_grp(void);
-void	run_real_grp()
+void grp_run_real_pro(void);
+void grp_run_real_pro()
 {
 	int run;
+	int real_head;
 	run_pat_entry(0,0x0L);			//process 0 is system special process`
+	real_head=grp_get_head(REAL_PROC);
 	if(real_head == 0)
 		return;						//no real process
 	run = real_head;

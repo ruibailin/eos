@@ -15,31 +15,36 @@
 #include "1imp.h"
 #include "queue.h"
 /*================================================================*/
-static	int msg_head=0;
+//static	int msg_head=0;
 
-void add_msg_grp(int pno);
-void add_msg_grp(int pno)
+void grp_add_msg_pro(int pno);
+void grp_add_msg_pro(int pno)
 {
+	int msg_head;
+	msg_head=grp_get_head(MSG_PROC);
 	if(pno == msg_head)
 		return;
 	if(msg_head == 0)
-		msg_head = pno;			//first process
-	grp_add_pro(msg_head,pno);
+		grp_set_head(MSG_PROC,pno);			//first process
+	else
+		grp_add_pro(msg_head,pno);
 }
 
-void del_msg_grp(int pno);
-void del_msg_grp(int pno)
+void grp_del_msg_pro(int pno);
+void grp_del_msg_pro(int pno)
 {
-	if(pno == msg_head)
-	{
-		msg_head = 0;
+	int msg_head;
+	msg_head=grp_get_head(MSG_PROC);
+	if(msg_head==0)
 		return;
-	}
-	grp_del_pro(msg_head,pno);
+	if(pno == msg_head)
+		grp_set_head(MSG_PROC,0);
+	else
+		grp_del_pro(pno);
 }
 
-void ini_msg_grp(void);
-void ini_msg_grp()
+void grp_ini_msg_pro(void);
+void grp_ini_msg_pro()
 {
 	int i,j;
 	for(i=1;i<MAX_PAT_NUM;i++)
@@ -47,17 +52,17 @@ void ini_msg_grp()
 		j=get_pat_tno(i);
 		if(j==MSG_PROC)
 		{
-			if(msg_head==0)
-				msg_head=i;	//first proc
-			add_msg_grp(i);
+			grp_add_msg_pro(i);
 		}
 	}
 }
 
-void run_msg_grp(void);	//only run one time
-void run_msg_grp()
+void grp_run_msg_pro(void);	//only run one time
+void grp_run_msg_pro()
 {
 	int run;
+	int msg_head;
+	msg_head=grp_get_head(MSG_PROC);
 	if(msg_head == 0)
 		return;						//no message-driven process
 	run = msg_head;

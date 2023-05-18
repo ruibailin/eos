@@ -15,29 +15,36 @@
 #include "1imp.h"
 #include "queue.h"
 /*================================================================*/
-static	int dum_head=0;
+//static	int dum_head=0;
 
-void add_dum_grp(int pno);
-void add_dum_grp(int pno)
+void grp_add_dum_pro(int pno);
+void grp_add_dum_pro(int pno)
 {
+	int dum_head;
+	dum_head=grp_get_head(DUM_PROC);
 	if(pno == dum_head)
 		return;
-	grp_add_pro(dum_head,pno);
+	if(dum_head == 0)
+		grp_set_head(DUM_PROC,pno);			//first process
+	else
+		grp_add_pro(dum_head,pno);
 }
 
-void del_dum_grp(int pno);
-void del_dum_grp(int pno)
+void grp_del_dum_pro(int pno);
+void grp_del_dum_pro(int pno)
 {
+	int dum_head;
+	dum_head=grp_get_head(DUM_PROC);
 	if(pno == dum_head)
 	{
 		dum_head=0;
 		return;
 	}
-	grp_del_pro(dum_head,pno);
+	grp_del_pro(pno);
 }
 
-void ini_dum_grp(void);
-void ini_dum_grp()
+void grp_ini_dum_pro(void);
+void grp_ini_dum_pro()
 {
 	int i,j;
 	for(i=1;i<MAX_PAT_NUM;i++)
@@ -45,17 +52,17 @@ void ini_dum_grp()
 		j=get_pat_tno(i);
 		if(j==DUM_PROC)
 		{
-			if(dum_head==0)
-				dum_head=i;	//first proc
-			add_dum_grp(i);
+			grp_add_dum_pro(i);
 		}
 	}
 }
 
-int  get_dum_grp(void);
-int  get_dum_grp()
+int  grp_get_dum_pro(void);
+int  grp_get_dum_pro()
 {
 	int pno;
+	int dum_head;
+	dum_head=grp_get_head(DUM_PROC);
 	if(dum_head == 0)
 	{
 		knl_print("no pat resource\n");
@@ -64,7 +71,7 @@ int  get_dum_grp()
 	}
 	pno=grp_get_pro(dum_head);
 	if(pno == dum_head)
-		dum_head=0;			//Only one node, queue is empety
+		grp_set_head(DUM_PROC,0);			//Only one node, queue is empety
 
 	return pno;
 }

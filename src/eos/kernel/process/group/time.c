@@ -15,27 +15,49 @@
 #include "1imp.h"
 #include "queue.h"
 /*================================================================*/
-static	int time_head=0;
+//static	int time_head=0;
 
-void add_time_grp(int pno);
-void add_time_grp(int pno)
+static uintxx time_slot[PAT_NODE_NUM];		//TIME proc only run in its slot;
+static	void set_time_slot(int pno);
+static	void set_time_slot(int pno)			//not strictly good algorithm
 {
-	if(pno == time_head)
-		return;
-	if(time_head == 0)
-		time_head = pno;			//first process
-	grp_add_pro(time_head,pno);
+	int slot,timer;
+	timer=get_pat_attr(pno);
+	if(timer==0)
+		timer=1;
+	slot=grp_get_num(TIME_PROC);
+	slot += timer;
+	slot %= timer;
+	time_slot[pno]=slot;
 }
 
-void del_time_grp(int pno);
-void del_time_grp(int pno)
+void grp_add_time_pro(int pno);
+void grp_add_time_pro(int pno)
 {
+	int time_head;
+	time_head=grp_get_head(TIME_PROC);
+	if(pno == time_head)
+		return;
+	grp_inc_num(TIME_PROC);
+	if(time_head == 0)
+		grp_set_head(TIME_PROC,pno);			//first process
+	else
+		grp_add_pro(time_head,pno);
+	set_time_slot(pno);
+}
+
+void grp_del_time_pro(int pno);
+void grp_del_time_pro(int pno)
+{
+	int time_head;
+	time_head=grp_get_head(TIME_PROC);
+	grp_dec_num(TIME_PROC);
 	if(pno == time_head)
 	{
-		time_head = 0;
+		grp_set_head(TIME_PROC,0);
 		return;
 	}
-	grp_del_pro(time_head,pno);
+	grp_del_pro(pno);
 }
 
 /*================================================================*/
@@ -45,18 +67,16 @@ static int time_delta;
 static int this_us,last_us;
 extern int rbl_get_usec(void);
 
-void ini_time_grp(void);
-void ini_time_grp()
+void grp_ini_time_pro(void);
+void grp_ini_time_pro()
 {
 	int i,j;
-	for(i=1;i<MAX_PAT_NUM;i++)
+	for(i=2;i<MAX_PAT_NUM;i++)
 	{
 		j=get_pat_tno(i);
 		if(j==TIME_PROC)
 		{
-			if(time_head==0)
-				time_head=i;	//first proc
-			add_time_grp(i);
+			grp_add_time_pro(i);
 		}
 	}
 	time_delta=SCHEDULE_TIME;
@@ -85,26 +105,51 @@ static	int is_time_run()
 }
 
 long int knl_run_ms=0;
-int	run_time_grp(void);
-int	run_time_grp()
+
+static int is_time_run_pro(int pno)
+{
+	int state;
+	int slot;
+	int attr;
+	state=time_slot[pno];
+	slot=(int)knl_run_ms;
+	attr = get_pat_attr(pno);
+	if(attr==0)
+		attr=1;
+	slot %= attr;
+	if(slot == state)
+		return 1;
+	else
+		return 0;
+}
+int	grp_run_time_pro(void);
+int	grp_run_time_pro()
 {
 	int run;
-
+	int pno;
+	int time_head;
+	time_head=grp_get_head(TIME_PROC);
 	run=is_time_run();
 	if(run==0)
 		return 0;
 	knl_run_ms++;
+	run_pat_entry(1,0x0L);		//system_timer
 	if(time_head == 0)
-		return 1;				//no real process
-	run = time_head;
+		return 0;				//no time process
+	run=0;
+	pno = time_head;
 	for(;;)						//schedule all time process in every time arrived;
 	{
-		run_pat_entry(run,0x0L);
-		run=grp_get_pro(run);
-		if(run == time_head)
-			return 1;
+		if(is_time_run_pro(pno))
+		{
+			run_pat_entry(pno,0x0L);
+			run=1;
+		}
+		pno=grp_get_pro(pno);
+		if(pno == time_head)
+			return run;
 	}
-	return 1;
+	return run;
 }
 /*================================================================*/
 int knl_get_rand(int srad);

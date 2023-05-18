@@ -17,39 +17,42 @@
 
 
 /*================================================================*/
-extern void 	grp_ini_pro(void);
+extern void grp_ini_pro(void);
 
-extern void add_dum_grp(int pno);
-extern void del_dum_grp(int pno);
-extern void ini_dum_grp(void);
-extern int  get_dum_grp(void);
+extern void grp_add_dum_pro(int pno);
+extern void grp_del_dum_pro(int pno);
+extern void grp_ini_dum_pro(void);
+extern int  grp_get_dum_pro(void);
 
 
-extern void add_idle_grp(int pno);
-extern void del_idle_grp(int pno);
-extern void ini_idle_grp(void);
-extern void	run_idle_grp(void);
+extern void grp_add_idle_pro(int pno);
+extern void grp_del_idle_pro(int pno);
+extern void grp_ini_idle_pro(void);
+extern void	grp_run_idle_pro(void);
 
-extern void add_msg_grp(int pno);
-extern void del_msg_grp(int pno);
-extern void ini_msg_grp(void);
-extern int	run_msg_grp(void);
+extern void grp_add_msg_pro(int pno);
+extern void grp_del_msg_pro(int pno);
+extern void grp_ini_msg_pro(void);
+extern int	grp_run_msg_pro(void);
 
-extern void add_slot_grp(int pno);
-extern void del_slot_grp(int pno);
-extern void ini_slot_grp(void);
-extern int	run_slot_grp(void);
+extern void grp_add_slot_pro(int pno);
+extern void grp_del_slot_pro(int pno);
+extern void grp_ini_slot_pro(void);
+extern int	grp_run_slot_pro(void);
 
-extern void add_time_grp(int pno);
-extern void del_time_grp(int pno);
-extern void ini_time_grp(void);
-extern int	run_time_grp(void);
+extern void grp_add_time_pro(int pno);
+extern void grp_del_time_pro(int pno);
+extern void grp_ini_time_pro(void);
+extern int	grp_run_time_pro(void);
 
-extern void add_real_grp(int pno);
-extern void del_real_grp(int pno);
-extern void ini_real_grp(void);
-extern void	run_real_grp(void);
+extern void grp_add_real_pro(int pno);
+extern void grp_del_real_pro(int pno);
+extern void grp_ini_real_pro(void);
+extern void	grp_run_real_pro(void);
 
+extern int 	grp_get_next_pro(int grp,int pro);
+extern void	grp_add_next_pro(int grp,int pro);
+extern void	grp_del_next_pro(int grp,int pro);
 /*================================================================*/
 
 #endif 

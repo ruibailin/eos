@@ -20,6 +20,7 @@ typedef struct{
 	uintxx   state;
 	uintxx   parent;
 	uintxx   timer[4];
+	void *	data;
 }PCB;
 
 /*------------------------------------*/
@@ -70,7 +71,20 @@ void	set_pcb_timer(int pcb,int ptno,int ttno)
 	PCBPool[pcb].timer[ptno]=(uintxx)ttno;
 }
 
-
+/*------------------------------------*/
+void *get_pcb_data(int pcb);
+void *get_pcb_data(int pcb)
+{
+	void *data;
+	data=PCBPool[pcb].data;
+	return(data);
+}
+/*------------------------------------*/
+void	set_pcb_data(int pcb,void *data);
+void	set_pcb_data(int pcb,void *data)
+{
+	PCBPool[pcb].data=data;
+}
 /*------------------------------------*/
 void ini_pcb_list(void);
 void ini_pcb_list()
@@ -80,6 +94,7 @@ void ini_pcb_list()
 	{
 		PCBPool[i].parent = 0;
 		PCBPool[i].state = 0;
+		PCBPool[i].data = 0x0L;
 	}
 
 }

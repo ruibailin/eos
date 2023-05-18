@@ -15,31 +15,36 @@
 #include "1imp.h"
 #include "queue.h"
 /*================================================================*/
-static	int idle_head=0;
+//static	int idle_head=0;
 
-void add_idle_grp(int pno);
-void add_idle_grp(int pno)
+void grp_add_idle_pro(int pno);
+void grp_add_idle_pro(int pno)
 {
+	int idle_head;
+	idle_head=grp_get_head(IDLE_PROC);
 	if(pno == idle_head)
 		return;
 	if(idle_head == 0)
-		idle_head = pno;			//first process
-	grp_add_pro(idle_head,pno);
+		grp_set_head(IDLE_PROC,pno);			//first process
+	else
+		grp_add_pro(idle_head,pno);
 }
 
-void del_idle_grp(int pno);
-void del_idle_grp(int pno)
+void grp_del_idle_pro(int pno);
+void grp_del_idle_pro(int pno)
 {
+	int idle_head;
+	idle_head=grp_get_head(IDLE_PROC);
 	if(pno == idle_head)
 	{
-		idle_head = 0;
+		grp_set_head(IDLE_PROC,0);
 		return;
 	}
-	grp_del_pro(idle_head,pno);
+	grp_del_pro(pno);
 }
 
-void ini_idle_grp(void);
-void ini_idle_grp()
+void grp_ini_idle_pro(void);
+void grp_ini_idle_pro()
 {
 	int i,j;
 	for(i=1;i<MAX_PAT_NUM;i++)
@@ -47,18 +52,17 @@ void ini_idle_grp()
 		j=get_pat_tno(i);
 		if(j==IDLE_PROC)
 		{
-			if(idle_head==0)
-				idle_head=i;	//first proc
-			add_idle_grp(i);
+			grp_add_idle_pro(i);
 		}
 	}
 }
 
-static  int run_idle;
-void	run_idle_grp(void);
-void	run_idle_grp()
+static  int run_idle=0;
+void	grp_run_idle_pro(void);
+void	grp_run_idle_pro()
 {
-
+	int idle_head;
+	idle_head=grp_get_head(IDLE_PROC);
 	if(idle_head == 0)
 		return;						//no idle process
 	if(run_idle == 0)

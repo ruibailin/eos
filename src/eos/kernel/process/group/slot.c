@@ -15,31 +15,36 @@
 #include "1imp.h"
 #include "queue.h"
 /*================================================================*/
-static	int slot_head=0;
+//static	int slot_head=0;
 
-void add_slot_grp(int pno);
-void add_slot_grp(int pno)
+void grp_add_slot_pro(int pno);
+void grp_add_slot_pro(int pno)
 {
+	int slot_head;
+	slot_head=grp_get_head(SLOT_PROC);
 	if(pno == slot_head)
 		return;
 	if(slot_head == 0)
-		slot_head = pno;			//first process
-	grp_add_pro(slot_head,pno);
+		grp_set_head(SLOT_PROC,pno);			//first process
+	else
+		grp_add_pro(slot_head,pno);
 }
 
-void del_slot_grp(int pno);
-void del_slot_grp(int pno)
+void grp_del_slot_pro(int pno);
+void grp_del_slot_pro(int pno)
 {
+	int slot_head;
+	slot_head=grp_get_head(SLOT_PROC);
 	if(pno == slot_head)
 	{
-		slot_head = 0;
+		grp_set_head(SLOT_PROC,0);
 		return;
 	}
-	grp_del_pro(slot_head,pno);
+	grp_del_pro(pno);
 }
 
-void ini_slot_grp(void);
-void ini_slot_grp()
+void grp_ini_slot_pro(void);
+void grp_ini_slot_pro()
 {
 	int i,j;
 	for(i=1;i<MAX_PAT_NUM;i++)
@@ -47,18 +52,18 @@ void ini_slot_grp()
 		j=get_pat_tno(i);
 		if(j==SLOT_PROC)
 		{
-			if(slot_head==0)
-				slot_head=i;	//first proc
-			add_slot_grp(i);
+			grp_add_slot_pro(i);
 		}
 	}
 }
 
 
-int	run_slot_grp(void);
-int	run_slot_grp()
+int	grp_run_slot_pro(void);
+int	grp_run_slot_pro()
 {
 	int run;
+	int slot_head;
+	slot_head=grp_get_head(SLOT_PROC);
 	if(slot_head == 0)
 		return 0;						//no time slot process
 	run=grp_get_pro(slot_head);
